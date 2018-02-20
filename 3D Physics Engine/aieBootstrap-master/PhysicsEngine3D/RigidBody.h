@@ -4,31 +4,31 @@
 class RigidBody : public PhysicsObject
 {
 public:
-	RigidBody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity,
+	RigidBody(ShapeType shapeID, glm::vec3 position, glm::vec3 velocity,
 		float rotation, float mass, float linearDrag,
 		float angularDrag, float elasticity);
 	~RigidBody();
 
-	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
+	virtual void fixedUpdate(glm::vec3 gravity, float timeStep);
 	virtual void debug() {}
 
-	void applyForce(glm::vec2 force);
-	void applyForceToActor(RigidBody* actor2, glm::vec2 force);
+	void applyForce(glm::vec3 force);
+	void applyForceToActor(RigidBody* actor2, glm::vec3 force);
 	void resolveCollision(RigidBody* actor2);
 
-	void setPosition(glm::vec2 pos) { m_position = pos; }
-	glm::vec2 getPosition() { return m_position; }
+	void setPosition(glm::vec3 pos) { m_position = pos; }
+	glm::vec3 getPosition() { return m_position; }
 
 	float getRotation() { return m_rotation; }
 	float getMass() { return m_mass; }
-	glm::vec2 getVelocity() { return m_velocity; }
+	glm::vec3 getVelocity() { return m_velocity; }
 	float getLinearDrag() { return m_linearDrag; }
 	float getAngularDrag() { return m_angularDrag; }
 	float getElasticity() { return m_elasticity; }
 
 protected:
-	glm::vec2 m_position;
-	glm::vec2 m_velocity;
+	glm::vec3 m_position;
+	glm::vec3 m_velocity;
 
 	float m_mass;
 	float m_rotation;

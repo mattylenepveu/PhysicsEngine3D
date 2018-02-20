@@ -21,7 +21,7 @@ static funcptr collisionFunctionArray[] =
 PhysicsScene::PhysicsScene()
 {
 	m_timeStep = 0.01f;
-	m_gravity = glm::vec2(0, 0);
+	m_gravity = glm::vec3(0, 0, 0);
 }
 
 PhysicsScene::~PhysicsScene()
@@ -94,11 +94,11 @@ bool PhysicsScene::plane2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (plane != nullptr || box != nullptr)
 	{
-		glm::vec2 v = plane->getNormal();
-		glm::vec2 bottomLeft = box->getMin();
-		glm::vec2 bottomRight = box->getMin() + glm::vec2(box->getWidth(), 0);
-		glm::vec2 topLeft = box->getMin() + glm::vec2(0, box->getHeight());
-		glm::vec2 topRight = box->getMax();
+		glm::vec3 v = plane->getNormal();
+		glm::vec3 bottomLeft = box->getMin();
+		glm::vec3 bottomRight = box->getMin() + glm::vec3(box->getWidth(), 0, 0);
+		glm::vec3 topLeft = box->getMin() + glm::vec3(0, box->getHeight(), 0);
+		glm::vec3 topRight = box->getMax();
 
 		if (glm::dot(v, bottomLeft) - plane->getDistance() < 0 ||
 			glm::dot(v, bottomRight) - plane->getDistance() < 0 ||
@@ -119,7 +119,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere != nullptr && plane != nullptr)
 	{
-		glm::vec2 collisionNormal = plane->getNormal();
+		glm::vec3 collisionNormal = plane->getNormal();
 
 		float sphereToPlane = glm::dot(sphere->getPosition(),
 			plane->getNormal()) - plane->getDistance();
@@ -149,15 +149,11 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		glm::vec2 v = sphere1->getPosition() - sphere2->getPosition();
+		glm::vec3 v = sphere1->getPosition() - sphere2->getPosition();
 		float radiusTotal = sphere1->getRadius() + sphere2->getRadius();
 
 		if (glm::length(v) <= radiusTotal)
 		{
-			/*float overlap = glm::length(v) - radiusTotal;
-			glm::vec2 overlapVec = glm::normalize(v) * overlap;
-			sphere2->setPosition(sphere2->getPosition() + overlapVec);*/
-
 			sphere1->resolveCollision(sphere2);
 
 			return true;
@@ -173,8 +169,8 @@ bool PhysicsScene::sphere2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere != nullptr && box != nullptr)
 	{
-		glm::vec2 a = glm::clamp(sphere->getPosition(), box->getMin(), box->getMax());
-		glm::vec2 v = a - sphere->getPosition();
+		glm::vec3 a = glm::clamp(sphere->getPosition(), box->getMin(), box->getMax());
+		glm::vec3 v = a - sphere->getPosition();
 
 		if (glm::length(v) <= sphere->getRadius())
 		{
@@ -202,16 +198,18 @@ bool PhysicsScene::aabb2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box1 != nullptr && box2 != nullptr)
 	{
-		glm::vec2 min1 = box1->getMin();
-		glm::vec2 max1 = box1->getMax();
+		glm::vec3 min1 = box1->getMin();
+		glm::vec3 max1 = box1->getMax();
 
-		glm::vec2 min2 = box2->getMin();
-		glm::vec2 max2 = box2->getMax();
+		glm::vec3 min2 = box2->getMin();
+		glm::vec3 max2 = box2->getMax();
 
 		if (min1.x <= max2.x &&
 			min1.y <= max2.y &&
 			max1.x >= min2.x &&
-			max1.y >= min2.y)
+			min1.z <= max2.z &&
+			max1.y >= min2.y &&
+			max1.z >= min2.z)
 		{
 			box1->resolveCollision(box2);
 			return true;
