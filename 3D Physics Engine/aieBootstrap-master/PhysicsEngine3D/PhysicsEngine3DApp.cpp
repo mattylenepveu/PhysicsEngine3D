@@ -22,34 +22,34 @@ PhysicsEngine3DApp::~PhysicsEngine3DApp() {
 
 bool PhysicsEngine3DApp::startup() 
 {
-	setBackgroundColour(0.25f, 0.25f, 0.25f);
+	setBackgroundColour(1, 1, 1);
 
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_viewMatrix = glm::lookAt(vec3(10), vec3(0), vec3(0, 1, 0));
+	m_viewMatrix = glm::lookAt(vec3(30), vec3(0), vec3(0, 1, 0));
 	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setGravity(vec3(0, -10, 0));
 	m_physicsScene->setTimeStep(0.03f);
 
-	Box* box1 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
-	Box* box2 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
-	Sphere* ball1 = new Sphere(vec3(5, 15, 1), vec3(0, 0, 0), 3.0f, 1.0f, vec4(0, 0, 1, 1));
-	Sphere* ball2 = new Sphere(vec3(10, 15, -3), vec3(0, 0, 0), 3.0f, 1.0f, vec4(1, 1, 0, 1));
+	Box* box1 = new Box(vec3(-10, 15, 0), vec3(20, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
+	Box* box2 = new Box(vec3(-8, 15, 5), vec3(16, 0, 1), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
+	Sphere* ball1 = new Sphere(vec3(5, 15, 1), vec3(12, 0, 0), 3.0f, 1.0f, vec4(0, 0, 1, 1));
+	Sphere* ball2 = new Sphere(vec3(10, 15, -3), vec3(-20, 0, 2), 3.0f, 1.0f, vec4(1, 1, 0, 1));
 
-	wall1 = new Box(vec3(0, 0, 0), vec3(0, 0, 0), 3.0f, 15.0f, 15.0f, 0.5f, vec4(1, 1, 1, 0.8f));
+	/*wall1 = new Box(vec3(0, 0, 0), vec3(0, 0, 0), 3.0f, 15.0f, 15.0f, 0.5f, vec4(1, 1, 1, 0.8f));
 	wall2 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
 	wall3 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
 	wall4 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
-	wall5 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
+	wall5 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));*/
 
-	box1->applyForce(vec3(20, 0, 0));
+	/*box1->applyForce(vec3(20, 0, 0));
 	box2->applyForce(vec3(16, 0, 1));
 	ball1->applyForce(vec3(12, 0, 0));
-	ball2->applyForce(vec3(-20, 0, 2));
+	ball2->applyForce(vec3(-20, 0, 2));*/
 
 	m_physicsScene->addActor(box1);
 	m_physicsScene->addActor(box2);
@@ -64,11 +64,11 @@ void PhysicsEngine3DApp::shutdown()
 	Gizmos::destroy();
 	delete m_physicsScene;
 
-	delete wall1;
+	/*delete wall1;
 	delete wall2;
 	delete wall3;
 	delete wall4;
-	delete wall5;
+	delete wall5;*/
 }
 
 void PhysicsEngine3DApp::update(float deltaTime) 

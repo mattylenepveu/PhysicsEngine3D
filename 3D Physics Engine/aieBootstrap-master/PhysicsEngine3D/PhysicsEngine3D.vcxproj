@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="BoxOOB.cpp" />
     <ClCompile Include="PhysicsEngine3DApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicsScene.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
+    <ClInclude Include="BoxOOB.h" />
     <ClInclude Include="PhysicsEngine3DApp.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsScene.h" />

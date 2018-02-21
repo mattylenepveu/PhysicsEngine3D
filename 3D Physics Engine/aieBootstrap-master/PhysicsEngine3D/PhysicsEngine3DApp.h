@@ -26,9 +26,9 @@ protected:
 
 	PhysicsScene* m_physicsScene;
 
-	Box* wall1;
+	/*Box* wall1;
 	Box* wall2;
 	Box* wall3;
 	Box* wall4;
-	Box* wall5;
+	Box* wall5;*/
 };

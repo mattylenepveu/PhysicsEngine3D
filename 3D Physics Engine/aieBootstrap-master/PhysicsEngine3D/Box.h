@@ -16,13 +16,15 @@ public:
 	float getDepth() { return m_depth; }
 
 	glm::vec3 getDimensions() { return m_dimensions; }
-	glm::vec3 getMin() {
+	glm::vec3 getMin() 
+	{
 		return glm::vec3(m_position.x - m_width,
-			m_position.y - m_height, m_position.z - m_depth);
+		m_position.y - m_height, m_position.z - m_depth);
 	}
-	glm::vec3 getMax() {
+	glm::vec3 getMax() 
+	{
 		return glm::vec3(m_position.x + m_width,
-			m_position.y + m_height, m_position.z + m_depth);
+		m_position.y + m_height, m_position.z + m_depth);
 	}
 
 	glm::vec4 getColour() { return m_colour; }

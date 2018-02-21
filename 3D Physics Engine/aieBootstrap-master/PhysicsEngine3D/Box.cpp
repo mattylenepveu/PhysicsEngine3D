@@ -10,6 +10,7 @@ Box::Box(glm::vec3 position, glm::vec3 velocity, float mass,
 	m_depth = depth;
 
 	m_dimensions = glm::vec3(m_width, m_height, m_depth);
+	m_moment = 1.0f / 12.0f * mass * width * height;
 
 	m_colour = colour;
 }

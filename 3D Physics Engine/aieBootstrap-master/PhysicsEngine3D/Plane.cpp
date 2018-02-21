@@ -26,16 +26,13 @@ void Plane::makeGizmo()
 	aie::Gizmos::add2DLine(start, end, colour);
 }
 
-void Plane::resolveCollision(RigidBody* actor2)
+void Plane::resolveCollision(RigidBody* actor2, glm::vec3 contact)
 {
-	glm::vec3 normal = m_normal;
-	glm::vec3 relativeVelocity = actor2->getVelocity();
+	glm::vec3 vRel = actor2->getVelocity();
+	float e = actor2->getElasticity();
+	float j = glm::dot(-(1 + e) * (vRel), m_normal) / (1 / actor2->getMass());
 
-	float elasticity = 1;
-	float j = glm::dot(-(1 + elasticity) * (relativeVelocity), normal)
-		/ glm::dot(normal, normal * (1 / actor2->getMass()));
+	glm::vec3 force = m_normal * j;
 
-	glm::vec3 force = normal * j;
-
-	actor2->applyForce(force);
+	actor2->applyForce(force, contact - actor2->getPosition());
 }
