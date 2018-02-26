@@ -176,7 +176,7 @@ bool PhysicsScene::sphere2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 
 		if (glm::length(v) <= sphere->getRadius())
 		{
-			//sphere->resolveCollision(box);
+			sphere->resolveCollision(box, sphere->getPosition());
 			return true;
 		}
 	}

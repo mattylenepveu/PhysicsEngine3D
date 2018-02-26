@@ -3,7 +3,7 @@
 
 Box::Box(glm::vec3 position, glm::vec3 velocity, float mass,
 	float width, float height, float depth, glm::vec4 colour) :
-	RigidBody(ShapeType::BOX, position, velocity, 0, mass, 0.2f, 0.2f, 0.8f)
+	RigidBody(ShapeType::BOX, position, velocity, mass)
 {
 	m_width = width;
 	m_height = height;
@@ -24,10 +24,10 @@ void Box::fixedUpdate(glm::vec3 gravity, float timeStep)
 	RigidBody::fixedUpdate(gravity, timeStep);
 
 	//store the local axes
-	float cs = cosf(m_rotation);
-	float sn = sinf(m_rotation);
+	//float cs = cosf(m_rotation);
+	//float sn = sinf(m_rotation);
 
-	m_rotXlocX = glm::normalize(glm::vec3(1, 0, 0));
+	/*m_rotXlocX = glm::normalize(glm::vec3(1, 0, 0));
 	m_rotXlocY = glm::normalize(glm::vec3(0, cs, -sn));
 	m_rotXlocZ = glm::normalize(glm::vec3(0, sn, cs));
 
@@ -37,7 +37,7 @@ void Box::fixedUpdate(glm::vec3 gravity, float timeStep)
 
 	m_rotZlocX = glm::normalize(glm::vec3(cs, -sn, 0));
 	m_rotZlocY = glm::normalize(glm::vec3(sn, cs, 0));
-	m_rotZlocZ = glm::normalize(glm::vec3(0, 0, 1));
+	m_rotZlocZ = glm::normalize(glm::vec3(0, 0, 1));*/
 }
 
 void Box::makeGizmo()

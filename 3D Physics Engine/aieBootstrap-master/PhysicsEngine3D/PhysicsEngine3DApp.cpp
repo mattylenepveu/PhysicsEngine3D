@@ -35,10 +35,10 @@ bool PhysicsEngine3DApp::startup()
 	m_physicsScene->setGravity(vec3(0, -10, 0));
 	m_physicsScene->setTimeStep(0.03f);
 
-	Box* box1 = new Box(vec3(-10, 15, 0), vec3(20, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
-	Box* box2 = new Box(vec3(-8, 15, 5), vec3(16, 0, 1), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
-	Sphere* ball1 = new Sphere(vec3(5, 15, 1), vec3(12, 0, 0), 3.0f, 1.0f, vec4(0, 0, 1, 1));
-	Sphere* ball2 = new Sphere(vec3(10, 15, -3), vec3(-20, 0, 2), 3.0f, 1.0f, vec4(1, 1, 0, 1));
+	//Box* box1 = new Box(vec3(-10, 15, 0), vec3(20, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
+	//Box* box2 = new Box(vec3(-8, 15, 5), vec3(16, 0, 1), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
+	Sphere* ball1 = new Sphere(vec3(-10, 20, 0), vec3(20, 0, 0), 3.0f, 1.0f, vec4(0, 0, 1, 1));
+	Sphere* ball2 = new Sphere(vec3(10, 20, 0), vec3(-20, 0, 0), 3.0f, 1.0f, vec4(1, 1, 0, 1));
 
 	/*wall1 = new Box(vec3(0, 0, 0), vec3(0, 0, 0), 3.0f, 15.0f, 15.0f, 0.5f, vec4(1, 1, 1, 0.8f));
 	wall2 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
@@ -51,8 +51,8 @@ bool PhysicsEngine3DApp::startup()
 	ball1->applyForce(vec3(12, 0, 0));
 	ball2->applyForce(vec3(-20, 0, 2));*/
 
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
+	//m_physicsScene->addActor(box1);
+	//m_physicsScene->addActor(box2);
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
 

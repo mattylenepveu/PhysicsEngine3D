@@ -36,7 +36,7 @@ protected:
 	float m_depth;
 
 	glm::vec3 m_dimensions;
-	glm::vec3 m_rotXlocX;
+	/*glm::vec3 m_rotXlocX;
 	glm::vec3 m_rotXlocY;
 	glm::vec3 m_rotXlocZ;
 	glm::vec3 m_rotYlocX;
@@ -44,9 +44,9 @@ protected:
 	glm::vec3 m_rotYlocZ;
 	glm::vec3 m_rotZlocX;
 	glm::vec3 m_rotZlocY;
-	glm::vec3 m_rotZlocZ;
-	/*glm::vec3 m_min;
-	glm::vec3 m_max;*/
+	glm::vec3 m_rotZlocZ;*/
+	glm::vec3 m_min;
+	glm::vec3 m_max;
 
 	glm::vec4 m_colour;
 };
