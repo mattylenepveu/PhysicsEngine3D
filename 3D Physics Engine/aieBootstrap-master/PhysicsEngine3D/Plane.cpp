@@ -23,7 +23,7 @@ void Plane::makeGizmo()
 	glm::vec3 start = m_centrePoint + (parallel * lineSegmentLength);
 	glm::vec3 end = m_centrePoint - (parallel * lineSegmentLength);
 
-	aie::Gizmos::add2DLine(start, end, colour);
+	aie::Gizmos::addAABBFilled(start, end, colour);
 }
 
 void Plane::resolveCollision(RigidBody* actor2, glm::vec3 contact)

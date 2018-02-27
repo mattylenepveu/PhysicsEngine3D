@@ -22,3 +22,9 @@ void Sphere::makeGizmo()
 	aie::Gizmos::addSphere(m_position, m_radius, 12, 12, m_colour);
 	//aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 0, 0, 1));
 }
+
+void Sphere::resetPosition(glm::vec3 position, glm::vec3 velocity)
+{
+	m_position = position;
+	m_velocity = velocity;
+}

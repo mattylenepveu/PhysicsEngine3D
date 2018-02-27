@@ -11,7 +11,7 @@ RigidBody::RigidBody(ShapeType shapeID, glm::vec3 position, glm::vec3 velocity, 
 	m_linearDrag = 1.0f;
 	m_angularDrag = 1.0f;
 	m_elasticity = 0.8f;
-	m_angularVelocity = glm::vec3(0.1f, 0, 0);
+	m_angularVelocity = glm::vec3(0.1f);
 
 	m_rotation = glm::mat4(1);
 }
@@ -27,14 +27,11 @@ void RigidBody::fixedUpdate(glm::vec3 gravity, float timeStep)
 	glm::quat zRotation = glm::angleAxis(m_angularVelocity.z * timeStep, glm::vec3(0, 0, 1));
 
 	glm::quat rotation = xRotation * yRotation * zRotation;
-
 	m_rotation = glm::mat4_cast(rotation) * m_rotation;
 
 	m_velocity += gravity * timeStep;
 	m_position += m_velocity * timeStep;
-
 	m_velocity -= m_velocity * m_linearDrag * timeStep;
-	//m_rotation += glm::vec4(m_angularVelocity, 1) * timeStep;
 	m_angularVelocity -= glm::cross(m_angularVelocity, m_position) * m_angularDrag * timeStep;
 
 	if (glm::length(m_velocity) < MIN_LINEAR_THRESHOLD)

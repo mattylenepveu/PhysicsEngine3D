@@ -44,3 +44,9 @@ void Box::makeGizmo()
 {
 	aie::Gizmos::addAABBFilled(m_position, m_dimensions, m_colour);
 }
+
+void Box::resetPosition(glm::vec3 position, glm::vec3 velocity)
+{
+	m_position = position;
+	m_velocity = velocity;
+}

@@ -22,7 +22,7 @@ PhysicsEngine3DApp::~PhysicsEngine3DApp() {
 
 bool PhysicsEngine3DApp::startup() 
 {
-	setBackgroundColour(1, 1, 1);
+	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
@@ -35,10 +35,31 @@ bool PhysicsEngine3DApp::startup()
 	m_physicsScene->setGravity(vec3(0, -10, 0));
 	m_physicsScene->setTimeStep(0.03f);
 
-	//Box* box1 = new Box(vec3(-10, 15, 0), vec3(20, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
-	//Box* box2 = new Box(vec3(-8, 15, 5), vec3(16, 0, 1), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
-	Sphere* ball1 = new Sphere(vec3(-10, 20, 0), vec3(20, 0, 0), 3.0f, 1.0f, vec4(0, 0, 1, 1));
-	Sphere* ball2 = new Sphere(vec3(10, 20, 0), vec3(-20, 0, 0), 3.0f, 1.0f, vec4(1, 1, 0, 1));
+	m_box1pos = vec3(10, 20, 0);
+	m_box2pos = vec3(-10, 20, 0);
+	m_box3pos = vec3(10, 20, 10);
+
+	m_ball1pos = vec3(10, 20, -10);
+	m_ball2pos = vec3(-10, 20, -10);
+	m_ball3pos = vec3(-10, 20, 10);
+
+	m_box1vel = vec3(-20, 0, 0);
+	m_box2vel = vec3(20, 0, 0);
+	m_box3vel = vec3(-20, 0, 0);
+
+	m_ball1vel = vec3(-20, 0, 0);
+	m_ball2vel = vec3(20, 0, 0);
+	m_ball3vel = vec3(20, 0, 0);
+
+	box1 = new Box(vec3(m_box1pos), vec3(m_box1vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
+	box2 = new Box(vec3(m_box2pos), vec3(m_box2vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
+	box3 = new Box(vec3(m_box3pos), vec3(m_box3vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 0, 1, 1));
+
+	ball1 = new Sphere(vec3(m_ball1pos), vec3(m_ball1vel), 3.0f, 1.0f, vec4(1, 1, 0, 1));
+	ball2 = new Sphere(vec3(m_ball2pos), vec3(m_ball2vel), 3.0f, 1.0f, vec4(1, 0, 1, 1));
+	ball3 = new Sphere(vec3(m_ball3pos), vec3(m_ball3vel), 3.0f, 1.0f, vec4(0, 1, 1, 1));
+
+	//Plane* plane = new Plane(glm::normalize(vec3(1, 0, 0)), 50);
 
 	/*wall1 = new Box(vec3(0, 0, 0), vec3(0, 0, 0), 3.0f, 15.0f, 15.0f, 0.5f, vec4(1, 1, 1, 0.8f));
 	wall2 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
@@ -51,10 +72,15 @@ bool PhysicsEngine3DApp::startup()
 	ball1->applyForce(vec3(12, 0, 0));
 	ball2->applyForce(vec3(-20, 0, 2));*/
 
-	//m_physicsScene->addActor(box1);
-	//m_physicsScene->addActor(box2);
+	m_physicsScene->addActor(box1);
+	m_physicsScene->addActor(box2);
+	m_physicsScene->addActor(box3);
+
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
+	m_physicsScene->addActor(ball3);
+
+	//m_physicsScene->addActor(plane);
 
 	return true;
 }
@@ -80,43 +106,15 @@ void PhysicsEngine3DApp::update(float deltaTime)
 	Gizmos::clear();
 
 	// draw a simple grid with gizmos
-	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
-	for (int i = 0; i < 31; ++i) \
+
+	for (int i = 0; i < 41; ++i) \
 	{
-		Gizmos::addLine(vec3(-15 + i, 0, 15),
-						vec3(-15 + i, 0, -15),
+		Gizmos::addLine(vec3(-20 + i, 0, 20),
+						vec3(-20 + i, 0, -20),
 						black);
-		Gizmos::addLine(vec3(15, 0, -15 + i),
-						vec3(-15, 0, -15 + i),
-						black);
-
-		Gizmos::addLine(vec3(-15, i, 15),
-						vec3(-15, i, -15),
-						black);
-		Gizmos::addLine(vec3(-15, 30, -15 + i),
-						vec3(-15, 0, -15 + i),
-						black);
-
-		Gizmos::addLine(vec3(15, i, -15),
-						vec3(-15, i, -15),
-						black);
-		Gizmos::addLine(vec3(-15 + i, 30, -15),
-						vec3(-15 + i, 0, -15),
-						black);
-
-		Gizmos::addLine(vec3(15, i, 15),
-						vec3(15, i, -15),
-						black);
-		Gizmos::addLine(vec3(15, 30, -15 + i),
-						vec3(15, 0, -15 + i),
-						black);
-
-		Gizmos::addLine(vec3(15, i, 15),
-						vec3(-15, i, 15),
-						black);
-		Gizmos::addLine(vec3(-15 + i, 30, 15),
-						vec3(-15 + i, 0, 15),
+		Gizmos::addLine(vec3(20, 0, -20 + i),
+						vec3(-20, 0, -20 + i),
 						black);
 	}
 
@@ -127,6 +125,17 @@ void PhysicsEngine3DApp::update(float deltaTime)
 	Gizmos::addTransform(mat4(1));
 	
 	aie::Input* input = aie::Input::getInstance();
+
+	if (input->wasKeyPressed(aie::INPUT_KEY_R))
+	{
+		box1->resetPosition(m_box1pos, m_box1vel);
+		box2->resetPosition(m_box2pos, m_box2vel);
+		box3->resetPosition(m_box3pos, m_box3vel);
+
+		ball1->resetPosition(m_ball1pos, m_ball1vel);
+		ball2->resetPosition(m_ball2pos, m_ball2vel);
+		ball3->resetPosition(m_ball3pos, m_ball3vel);
+	}
 
 	if (input->isKeyDown(aie::INPUT_KEY_UP))
 	{
@@ -167,7 +176,6 @@ void PhysicsEngine3DApp::update(float deltaTime)
 
 		m_viewMatrix = inverse(worldMatrix);
 	}
-
 
 	// quit if we press escape
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))

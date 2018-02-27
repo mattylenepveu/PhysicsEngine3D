@@ -11,6 +11,7 @@ public:
 
 	void fixedUpdate(glm::vec3 gravity, float timeStep);
 	virtual void makeGizmo();
+	void resetPosition(glm::vec3 position, glm::vec3 velocity);
 
 	float getWidth() { return m_width; }
 	float getHeight() { return m_height; }

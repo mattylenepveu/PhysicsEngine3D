@@ -21,14 +21,32 @@ public:
 
 protected:
 	// camera transforms
-	glm::mat4	m_viewMatrix;
-	glm::mat4	m_projectionMatrix;
+	glm::mat4 m_viewMatrix;
+	glm::mat4 m_projectionMatrix;
 
 	PhysicsScene* m_physicsScene;
 
-	/*Box* wall1;
-	Box* wall2;
-	Box* wall3;
-	Box* wall4;
-	Box* wall5;*/
+	Box* box1;
+	Box* box2;
+	Box* box3;
+
+	Sphere* ball1;
+	Sphere* ball2;
+	Sphere* ball3;
+
+	glm::vec3 m_box1pos;
+	glm::vec3 m_box2pos;
+	glm::vec3 m_box3pos;
+
+	glm::vec3 m_ball1pos;
+	glm::vec3 m_ball2pos;
+	glm::vec3 m_ball3pos;
+
+	glm::vec3 m_box1vel;
+	glm::vec3 m_box2vel;
+	glm::vec3 m_box3vel;
+
+	glm::vec3 m_ball1vel;
+	glm::vec3 m_ball2vel;
+	glm::vec3 m_ball3vel;
 };
