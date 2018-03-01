@@ -9,10 +9,6 @@ Plane::Plane(glm::vec3 normal, float distance) : PhysicsObject(ShapeType::PLANE)
 	m_normal = normal;
 }
 
-Plane::~Plane()
-{
-}
-
 void Plane::makeGizmo()
 {
 	float lineSegmentLength = 300;

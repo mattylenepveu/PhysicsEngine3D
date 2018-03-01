@@ -1,194 +1,233 @@
 #include "PhysicsEngine3DApp.h"
 #include "Gizmos.h"
 #include "Input.h"
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include "PhysicsScene.h"
 #include "Box.h"
 #include "Sphere.h"
-#include "Plane.h"
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
-using aie::Gizmos;
-
-PhysicsEngine3DApp::PhysicsEngine3DApp() {
-
-}
-
-PhysicsEngine3DApp::~PhysicsEngine3DApp() {
-
-}
-
+//--------------------------------------------------------------------------------
+// Function acts as this class' constructor.
+//
+// Return:
+//		Returns a bool indicating if function is called.
+//--------------------------------------------------------------------------------
 bool PhysicsEngine3DApp::startup() 
 {
+	// Sets background colour to a dark grey
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
-	// initialise gizmo primitive counts
-	Gizmos::create(10000, 10000, 10000, 10000);
+	// Initializes gizmo primitive counts
+	aie::Gizmos::create(10000, 10000, 10000, 10000);
 
-	// create simple camera transforms
-	m_viewMatrix = glm::lookAt(vec3(30), vec3(0), vec3(0, 1, 0));
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
+	// Creates simple camera transforms
+	m_viewMatrix = glm::lookAt(glm::vec3(30), glm::vec3(0), glm::vec3(0, 1, 0));
+	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, 
+										  16.0f / 9.0f, 0.1f, 1000.0f);
 
+	// Creates a "new" PhysicsScene pointer
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec3(0, -10, 0));
+
+	// Sets gravity to -10 m/s/s on the Y axis
+	m_physicsScene->setGravity(glm::vec3(0, -10, 0));
+
+	// Initilizes time step to be 0.03
 	m_physicsScene->setTimeStep(0.03f);
 
-	m_box1pos = vec3(10, 20, 0);
-	m_box2pos = vec3(-10, 20, 0);
-	m_box3pos = vec3(10, 20, 10);
+	// Sets values for the three boxes' positions
+	m_box1pos = glm::vec3(10, 20, 0);
+	m_box2pos = glm::vec3(-10, 20, 0);
+	m_box3pos = glm::vec3(10, 20, 10);
 
-	m_ball1pos = vec3(10, 20, -10);
-	m_ball2pos = vec3(-10, 20, -10);
-	m_ball3pos = vec3(-10, 20, 10);
+	// Sets values for the three sphere's positions
+	m_ball1pos = glm::vec3(10, 20, -10);
+	m_ball2pos = glm::vec3(-10, 20, -10);
+	m_ball3pos = glm::vec3(-10, 20, 10);
 
-	m_box1vel = vec3(-20, 0, 0);
-	m_box2vel = vec3(20, 0, 0);
-	m_box3vel = vec3(-20, 0, 0);
+	// Sets values for the three boxes' velocities
+	m_box1vel = glm::vec3(-20, 0, 0);
+	m_box2vel = glm::vec3(20, 0, 0);
+	m_box3vel = glm::vec3(-20, 0, 0);
 
-	m_ball1vel = vec3(-20, 0, 0);
-	m_ball2vel = vec3(20, 0, 0);
-	m_ball3vel = vec3(20, 0, 0);
+	// Sets values for the three sphere's velocities
+	m_ball1vel = glm::vec3(-20, 0, 0);
+	m_ball2vel = glm::vec3(20, 0, 0);
+	m_ball3vel = glm::vec3(20, 0, 0);
+	
+	// Creates a "new" Box for the three boxes, each passing data in the parameters
+	box1 = new Box(glm::vec3(m_box1pos), glm::vec3(m_box1vel), 
+				   3.0f, 1.0f, 1.0f, 1.0f, glm::vec4(1, 0, 0, 1));
+	box2 = new Box(glm::vec3(m_box2pos), glm::vec3(m_box2vel), 
+				   3.0f, 1.0f, 1.0f, 1.0f, glm::vec4(0, 1, 0, 1));
+	box3 = new Box(glm::vec3(m_box3pos), glm::vec3(m_box3vel), 
+				   3.0f, 1.0f, 1.0f, 1.0f, glm::vec4(0, 0, 1, 1));
 
-	box1 = new Box(vec3(m_box1pos), vec3(m_box1vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 0, 0, 1));
-	box2 = new Box(vec3(m_box2pos), vec3(m_box2vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 1, 0, 1));
-	box3 = new Box(vec3(m_box3pos), vec3(m_box3vel), 3.0f, 1.0f, 1.0f, 1.0f, vec4(0, 0, 1, 1));
+	// Creates a "new" sphere for the three spheres, each passing data in parameters
+	ball1 = new Sphere(glm::vec3(m_ball1pos), glm::vec3(m_ball1vel), 
+					   3.0f, 1.0f, glm::vec4(1, 1, 0, 1));
+	ball2 = new Sphere(glm::vec3(m_ball2pos), glm::vec3(m_ball2vel), 
+					   3.0f, 1.0f, glm::vec4(1, 0, 1, 1));
+	ball3 = new Sphere(glm::vec3(m_ball3pos), glm::vec3(m_ball3vel), 
+					   3.0f, 1.0f, glm::vec4(0, 1, 1, 1));
 
-	ball1 = new Sphere(vec3(m_ball1pos), vec3(m_ball1vel), 3.0f, 1.0f, vec4(1, 1, 0, 1));
-	ball2 = new Sphere(vec3(m_ball2pos), vec3(m_ball2vel), 3.0f, 1.0f, vec4(1, 0, 1, 1));
-	ball3 = new Sphere(vec3(m_ball3pos), vec3(m_ball3vel), 3.0f, 1.0f, vec4(0, 1, 1, 1));
-
-	//Plane* plane = new Plane(glm::normalize(vec3(1, 0, 0)), 50);
-
-	/*wall1 = new Box(vec3(0, 0, 0), vec3(0, 0, 0), 3.0f, 15.0f, 15.0f, 0.5f, vec4(1, 1, 1, 0.8f));
-	wall2 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
-	wall3 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
-	wall4 = new Box(vec3(-8, 15, 5), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));
-	wall5 = new Box(vec3(-10, 15, 0), vec3(0, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, vec4(1, 1, 1, 0.5f));*/
-
-	/*box1->applyForce(vec3(20, 0, 0));
-	box2->applyForce(vec3(16, 0, 1));
-	ball1->applyForce(vec3(12, 0, 0));
-	ball2->applyForce(vec3(-20, 0, 2));*/
-
+	// Adds all three boxes as actors to the physics scene
 	m_physicsScene->addActor(box1);
 	m_physicsScene->addActor(box2);
 	m_physicsScene->addActor(box3);
 
+	// Adds all three boxes as actors to the physics scene
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
 	m_physicsScene->addActor(ball3);
 
-	//m_physicsScene->addActor(plane);
-
+	// Returns true by default
 	return true;
 }
 
+//--------------------------------------------------------------------------------
+// Function acts as this class' destructor.
+//--------------------------------------------------------------------------------
 void PhysicsEngine3DApp::shutdown() 
 {
-	Gizmos::destroy();
-	delete m_physicsScene;
+	// Deletes all the created Gizmos
+	aie::Gizmos::destroy();
 
-	/*delete wall1;
-	delete wall2;
-	delete wall3;
-	delete wall4;
-	delete wall5;*/
+	// Deletes the physics scene pointer
+	delete m_physicsScene;
 }
 
+//--------------------------------------------------------------------------------
+// Updates all the variables every frame.
+//
+// Param:
+//		deltaTime: A float used to indicate real time.
+//--------------------------------------------------------------------------------
 void PhysicsEngine3DApp::update(float deltaTime) 
 {
-	// query time since application started
+	// Query time since application started
 	float time = getTime();
 
-	// wipe the gizmos clean for this frame
-	Gizmos::clear();
+	// Wipe the gizmos clean for this frame
+	aie::Gizmos::clear();
 
-	// draw a simple grid with gizmos
-	vec4 black(0, 0, 0, 1);
+	// Initilizes black as a colour for use when lines are drawn
+	glm::vec4 black(0, 0, 0, 1);
 
-	for (int i = 0; i < 41; ++i) \
+	// Draws a simple grid with gizmos
+	for (int i = 0; i < 41; ++i)
 	{
-		Gizmos::addLine(vec3(-20 + i, 0, 20),
-						vec3(-20 + i, 0, -20),
+		aie::Gizmos::addLine(glm::vec3(-20 + i, 0, 20),
+						glm::vec3(-20 + i, 0, -20),
 						black);
-		Gizmos::addLine(vec3(20, 0, -20 + i),
-						vec3(-20, 0, -20 + i),
+		aie::Gizmos::addLine(glm::vec3(20, 0, -20 + i),
+						glm::vec3(-20, 0, -20 + i),
 						black);
 	}
 
+	// Updates the Physics Scene every frame
 	m_physicsScene->update(deltaTime);
+
+	// Updates the gizmos that are apart of the Physics Scene
 	m_physicsScene->updateGizmos();
 
-	// add a transform so that we can see the axis
-	Gizmos::addTransform(mat4(1));
+	// Add a transform so that we can see the axis
+	aie::Gizmos::addTransform(glm::mat4(1));
 	
+	// Creates a local input pointer so user can move the camera
 	aie::Input* input = aie::Input::getInstance();
 
+	// Checks if the "R" key has been pressed
 	if (input->wasKeyPressed(aie::INPUT_KEY_R))
 	{
+		// Calls resetPosition function for the boxes
 		box1->resetPosition(m_box1pos, m_box1vel);
 		box2->resetPosition(m_box2pos, m_box2vel);
 		box3->resetPosition(m_box3pos, m_box3vel);
 
+		// Calls resetPosition function for the spheres
 		ball1->resetPosition(m_ball1pos, m_ball1vel);
 		ball2->resetPosition(m_ball2pos, m_ball2vel);
 		ball3->resetPosition(m_ball3pos, m_ball3vel);
 	}
 
+	// Checks if the "UP" key is down every frame
 	if (input->isKeyDown(aie::INPUT_KEY_UP))
 	{
-		mat4 worldMatrix = inverse(m_viewMatrix);
+		// Creates a world matrix as an inverse of the view matrix
+		glm::mat4 worldMatrix = inverse(m_viewMatrix);
+
+		// Sets the position of the camera and zooms it out
 		worldMatrix[3] -= worldMatrix[2] * deltaTime * 10.0f;
+
+		// Updates the view matrix
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
+	// Checks if the "DOWN" key is down every frame
 	if (input->isKeyDown(aie::INPUT_KEY_DOWN))
 	{
-		mat4 worldMatrix = inverse(m_viewMatrix);
+		// Creates a world matrix as an inverse of the view matrix
+		glm::mat4 worldMatrix = inverse(m_viewMatrix);
+
+		// Sets the position of the camera and zooms it in
 		worldMatrix[3] += worldMatrix[2] * deltaTime * 10.0f;
+
+		// Updates the view matrix
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
+	// Checks if the "LEFT" key is down every frame
 	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
 	{
-		mat4 worldMatrix = inverse(m_viewMatrix);
+		// Creates a world matrix as an inverse of the view matrix
+		glm::mat4 worldMatrix = inverse(m_viewMatrix);
 
-		mat4 rot = glm::rotate(mat4(1.0f), deltaTime * -1.0f, vec3(m_viewMatrix * vec4(0, 1, 0, 0)));
-			//vec3(worldMatrix[1]));
-		
-		//worldMatrix = rot * worldMatrix;
-		worldMatrix = worldMatrix * rot;
+		// Creates a rotation matrix, allowing user to rotate camera left
+		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * -1.0f, 
+									glm::vec3(m_viewMatrix * glm::vec4(0, 1, 0, 0)));
 
+		// Multiplies world matrix by the rotation matrix
+		worldMatrix *= rot;
+
+		// Updates the view matrix
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
+	// Checks if the "RIGHT" key is down every frame
 	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
 	{
-		mat4 worldMatrix = inverse(m_viewMatrix);
+		// Creates a world matrix as an inverse of the view matrix
+		glm::mat4 worldMatrix = inverse(m_viewMatrix);
 
-		mat4 rot = glm::rotate(mat4(1.0f), deltaTime * +1.0f, vec3(m_viewMatrix * vec4(0, 1, 0, 0)));
-		//vec3(worldMatrix[1]));
+		// Creates a rotation matrix, allowing user to rotate camera right
+		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * 1.0f, 
+									glm::vec3(m_viewMatrix * glm::vec4(0, 1, 0, 0)));
 
-		//worldMatrix = rot * worldMatrix;
-		worldMatrix = worldMatrix * rot;
+		// Multiplies world matrix by the rotation matrix
+		worldMatrix *= rot;
 
+		// Updates the view matrix
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
-	// quit if we press escape
+	// Close application if we press "ESCAPE"
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
 
+//--------------------------------------------------------------------------------
+// Draws all the Gizmos into the application when called.
+//--------------------------------------------------------------------------------
 void PhysicsEngine3DApp::draw() 
 {
-	// wipe the screen to the background colour
+	// Wipes the screen to the background colour
 	clearScreen();
 
-	// update perspective based on screen size
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
+	// Updates perspective based on screen size
+	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / 
+										 (float)getWindowHeight(), 0.1f, 1000.0f);
 
-	Gizmos::draw(m_projectionMatrix * m_viewMatrix);
+	// Draws the gizmos based on the projection matrix times the view matrix
+	aie::Gizmos::draw(m_projectionMatrix * m_viewMatrix);
 }
