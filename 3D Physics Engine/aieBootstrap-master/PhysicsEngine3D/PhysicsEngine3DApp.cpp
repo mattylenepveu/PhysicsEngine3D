@@ -4,6 +4,8 @@
 #include "PhysicsScene.h"
 #include "Box.h"
 #include "Sphere.h"
+#include "Plane.h"
+#include "Imgui.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -36,14 +38,14 @@ bool PhysicsEngine3DApp::startup()
 	m_physicsScene->setTimeStep(0.03f);
 
 	// Sets values for the three boxes' positions
-	m_box1pos = glm::vec3(10, 20, 0);
+	m_box1pos = glm::vec3(10, 20, 1);
 	m_box2pos = glm::vec3(-10, 20, 0);
 	m_box3pos = glm::vec3(10, 20, 10);
 
 	// Sets values for the three sphere's positions
-	m_ball1pos = glm::vec3(10, 20, -10);
-	m_ball2pos = glm::vec3(-10, 20, -10);
-	m_ball3pos = glm::vec3(-10, 20, 10);
+	m_ball1pos = glm::vec3(10, 20, -9);
+	m_ball2pos = glm::vec3(-10, 20, -9.5f);
+	m_ball3pos = glm::vec3(-10, 20, 11);
 
 	// Sets values for the three boxes' velocities
 	m_box1vel = glm::vec3(-20, 0, 0);
@@ -71,6 +73,9 @@ bool PhysicsEngine3DApp::startup()
 	ball3 = new Sphere(glm::vec3(m_ball3pos), glm::vec3(m_ball3vel), 
 					   3.0f, 1.0f, glm::vec4(0, 1, 1, 1));
 
+	// Creates a "new" plane, passing in the normal and distance of the plane
+	Plane* plane = new Plane(glm::normalize(glm::vec3(0, 1, 0)), 0);
+
 	// Adds all three boxes as actors to the physics scene
 	m_physicsScene->addActor(box1);
 	m_physicsScene->addActor(box2);
@@ -80,6 +85,9 @@ bool PhysicsEngine3DApp::startup()
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
 	m_physicsScene->addActor(ball3);
+
+	// Adds the plane to the physics scene as an actor
+	m_physicsScene->addActor(plane);
 
 	// Returns true by default
 	return true;
@@ -105,6 +113,25 @@ void PhysicsEngine3DApp::shutdown()
 //--------------------------------------------------------------------------------
 void PhysicsEngine3DApp::update(float deltaTime) 
 {
+	ImGui::Begin("Add Box");
+
+	if (ImGui::Button("Add Box", ImVec2(50, 50)))
+	{
+		Box* newBox = new Box(glm::vec3(0, 10, 0), glm::vec3(2, 0, 0),
+							  3.0f, 1.0f, 1.0f, 1.0f, glm::vec4(1, 0, 0, 1));
+		m_physicsScene->addActor(newBox);
+	}
+
+	ImGui::End();
+
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	////tetgui();
+
+	////collisionDebugInfo();
+
+	//ImGui::End();
+
 	// Query time since application started
 	float time = getTime();
 

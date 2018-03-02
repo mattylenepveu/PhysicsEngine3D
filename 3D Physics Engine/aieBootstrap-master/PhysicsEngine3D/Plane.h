@@ -43,19 +43,39 @@ public:
 	virtual void makeGizmo();
 
 	//--------------------------------------------------------------------------------
+	// Function used for debugging purposes (used in inherited classes).
+	//--------------------------------------------------------------------------------
+	virtual void debug() {}
+
+	//--------------------------------------------------------------------------------
 	// Resolves any collision that has occured between the plane and another object.
 	//
 	// Param:
 	//		actor2: A RigidBody pointer indicating the colliding object
 	//		contact: A Vector3 that indicates how much contact has been made
 	//--------------------------------------------------------------------------------
-	void resolveCollision(RigidBody* actor2, glm::vec3 contact);
+	void resolveCollision(RigidBody* actor2/*, glm::vec3 contact*/);
 
+	//--------------------------------------------------------------------------------
+	// A getter function that returns the normal of the plane.
+	//
+	// Return:
+	//		Returns the plane's normal as a float
+	//--------------------------------------------------------------------------------
 	glm::vec3 getNormal() { return m_normal; }
+
+	//--------------------------------------------------------------------------------
+	// A getter function that returns the distance of the plane.
+	//
+	// Return:
+	//		Returns the plane's  as a float.
+	//--------------------------------------------------------------------------------
 	float getDistance() { return m_distanceToOrigin; }
 
 protected:
+	// A Vector3 indicating the normal of the plane
 	glm::vec3 m_normal;
 
+	// A float representing the distance of the plane
 	float m_distanceToOrigin;
 };

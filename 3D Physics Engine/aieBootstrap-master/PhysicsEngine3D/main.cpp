@@ -1,5 +1,6 @@
 // Includes(s)
 #include "PhysicsEngine3DApp.h"
+#include <crtdbg.h>
 
 //--------------------------------------------------------------------------------
 // Main function that runs the application.
@@ -9,7 +10,9 @@
 //--------------------------------------------------------------------------------
 int main() 
 {
-	
+	// Detects any memory leaks throughout the project
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	// Creates a "new" PhysicsEngine3DApp so we can run application
 	auto app = new PhysicsEngine3DApp();
 

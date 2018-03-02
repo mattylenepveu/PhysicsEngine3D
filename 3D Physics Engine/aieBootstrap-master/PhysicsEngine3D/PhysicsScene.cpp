@@ -171,24 +171,59 @@ bool PhysicsScene::plane2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 		glm::vec3 v = plane->getNormal();
 
 		// Gets the minimum of the box and stores it as the bottom left corner
-		glm::vec3 bottomLeft = box->getMin();
+		glm::vec3 bottomLeftBelow = box->getMin();
 
 		// Calculates the bottom right corner of the box
-		glm::vec3 bottomRight = box->getMin() + glm::vec3(box->getWidth(), 0, 0);
+		glm::vec3 bottomRightBelow = box->getMin() + glm::vec3(box->getWidth(), 0, 0);
 
 		// Calculates the top left corner of the box
-		glm::vec3 topLeft = box->getMin() + glm::vec3(0, box->getHeight(), 0);
+		glm::vec3 topLeftBelow = box->getMin() + glm::vec3(0, box->getHeight(), 0);
 
 		// Gets the maximum of the box and stores it as the top right corner
-		glm::vec3 topRight = box->getMax();
+		glm::vec3 topRightBelow = box->getMax();
 
-		// Calculates and checks for collision
-		if (glm::dot(v, bottomLeft) - plane->getDistance() < 0 ||
-			glm::dot(v, bottomRight) - plane->getDistance() < 0 ||
-			glm::dot(v, topLeft) - plane->getDistance() < 0 ||
-			glm::dot(v, topRight) - plane->getDistance() < 0)
+		// Gets the minimum of the box and stores it as the bottom left corner
+		glm::vec3 bottomLeftAbove = box->getMin() + glm::vec3(0, 0, box->getDepth());
+
+		// Calculates the bottom right corner of the box
+		glm::vec3 bottomRightAbove = box->getMin() + glm::vec3(box->getWidth(), 0, box->getDepth());
+
+		// Calculates the top left corner of the box
+		glm::vec3 topLeftAbove = box->getMin() + glm::vec3(0, box->getHeight(), box->getDepth());
+
+		// Gets the maximum of the box and stores it as the top right corner
+		glm::vec3 topRightAbove = box->getMax() + glm::vec3(0, 0, box->getDepth());
+		
+		float ol[8] = { 0.0f };
+
+		ol[0] = glm::dot(v, bottomLeftBelow) - plane->getDistance();
+		ol[1] = glm::dot(v, bottomRightBelow) - plane->getDistance();
+		ol[2] = glm::dot(v, topLeftBelow) - plane->getDistance();
+		ol[3] = glm::dot(v, topRightBelow) - plane->getDistance();
+		ol[4] = glm::dot(v, bottomLeftBelow) - plane->getDistance();
+		ol[5] = glm::dot(v, bottomRightBelow) - plane->getDistance();
+		ol[6] = glm::dot(v, topLeftBelow) - plane->getDistance();
+		ol[7] = glm::dot(v, topRightBelow) - plane->getDistance();
+
+		float maxOl = 0;
+
+		for (int i = 0; i < 8; ++i)
 		{
-			//plane->resolveCollision(box);
+			if (ol[i] < maxOl)
+			{
+				maxOl = ol[i];
+			}
+		}
+		
+		if (maxOl < 0)
+		{
+			// Calculates the contact between the box and plane
+			glm::vec3 contact = box->getPosition() + (v * -box->getWidth());
+
+			// Calls plane's resolveCollision function passing in the box and contact
+			plane->resolveCollision(box/*, contact*/);
+
+			box->setPosition(box->getPosition() - plane->getNormal() * maxOl);
 
 			// Returns true as collision has been detected
 			return true;
@@ -241,8 +276,13 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 			// Calculates the contact between the sphere and plane
 			glm::vec3 contact = sphere->getPosition() + (collisionNormal * -sphere->getRadius());
 
-			// Calls plane's resolve collision function, passing in the sphere and the contact vector
-			plane->resolveCollision(sphere, contact);
+			// Calls plane's resolve collision function passing in the sphere
+			plane->resolveCollision(sphere/*, contact*/);
+
+			// Sets position of the sphere back so it doesn't fall through the plane
+			sphere->setPosition(contact + collisionNormal * 
+							   (sphere->getRadius() + intersection));
+
 
 			// Returns true as there is collision detected
 			return true;
@@ -291,8 +331,8 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 			sphere2->setPosition(sphere2->getPosition() - contactForce);
 
 			// Calls one sphere's resolveCollision function
-			sphere1->resolveCollision(sphere2, 0.05f * (sphere1->getPosition() + 
-													   sphere2->getPosition()));
+			sphere1->resolveCollision(sphere2/*, 0.05f * (sphere1->getPosition() + 
+													   sphere2->getPosition())*/);
 
 			// Returns true as there is collision detected
 			return true;
@@ -337,7 +377,7 @@ bool PhysicsScene::sphere2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 			glm::vec3 ol = sphere->getRadius() - v;
 
 			// Calls sphere's resolveCollision function passing in box and collision normal
-			sphere->resolveCollision(box, cn);
+			sphere->resolveCollision(box/*, cn*/);
 
 			// Returns true as there is collision detected
 			return true;
@@ -412,7 +452,7 @@ bool PhysicsScene::aabb2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 			max1.y >= min2.y &&
 			max1.z >= min2.z)
 		{
-			//box1->resolveCollision(box2);
+			box1->resolveCollision(box2);
 
 			// Returns true as there is collision detected
 			return true;

@@ -10,9 +10,9 @@ public:
 	virtual void fixedUpdate(glm::vec3 gravity, float timeStep);
 	virtual void debug() {}
 
-	void applyForce(glm::vec3 force, glm::vec3 pos);
-	//void applyForceToActor(RigidBody* actor2, glm::vec3 force);
-	void resolveCollision(RigidBody* actor2, glm::vec3 contact, glm::vec3* collisionNormal = nullptr);
+	void applyForce(glm::vec3 force/*, glm::vec3 pos*/);
+	void applyForceToActor(RigidBody* actor2, glm::vec3 force);
+	void resolveCollision(RigidBody* actor2/*, glm::vec3 contact, glm::vec3* collisionNormal = nullptr*/);
 
 	void setPosition(glm::vec3 pos) { m_position = pos; }
 	glm::vec3 getPosition() { return m_position; }

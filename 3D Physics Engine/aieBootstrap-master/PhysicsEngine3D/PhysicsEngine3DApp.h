@@ -2,12 +2,14 @@
 
 // Include(s)
 #include "Application.h"
+#include "Font.h"
 #include <glm/mat4x4.hpp>
 
 // Forward Declare(s)
 class PhysicsScene;
 class Box;
 class Sphere;
+class Plane;
 
 // Class inherits from Application in bootstrap
 class PhysicsEngine3DApp : public aie::Application 
@@ -66,6 +68,9 @@ protected:
 	Sphere* ball1;
 	Sphere* ball2;
 	Sphere* ball3;
+
+	// Plane pointer used to create a new plane
+	//Plane* plane;
 
 	// Vector3s used to initilize the three boxes' positions
 	glm::vec3 m_box1pos;

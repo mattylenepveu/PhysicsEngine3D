@@ -19,10 +19,10 @@ void Plane::makeGizmo()
 	glm::vec3 start = m_centrePoint + (parallel * lineSegmentLength);
 	glm::vec3 end = m_centrePoint - (parallel * lineSegmentLength);
 
-	aie::Gizmos::addAABBFilled(start, end, colour);
+	//aie::Gizmos::addAABBFilled(start, end, colour);
 }
 
-void Plane::resolveCollision(RigidBody* actor2, glm::vec3 contact)
+void Plane::resolveCollision(RigidBody* actor2/*, glm::vec3 contact*/)
 {
 	glm::vec3 vRel = actor2->getVelocity();
 	float e = actor2->getElasticity();
@@ -30,5 +30,5 @@ void Plane::resolveCollision(RigidBody* actor2, glm::vec3 contact)
 
 	glm::vec3 force = m_normal * j;
 
-	actor2->applyForce(force, contact - actor2->getPosition());
+	actor2->applyForce(force/*, contact - actor2->getPosition()*/);
 }
