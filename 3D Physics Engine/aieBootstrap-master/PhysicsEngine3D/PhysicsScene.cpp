@@ -221,7 +221,7 @@ bool PhysicsScene::plane2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 			glm::vec3 contact = box->getPosition() + (v * -box->getWidth());
 
 			// Calls plane's resolveCollision function passing in the box and contact
-			plane->resolveCollision(box/*, contact*/);
+			plane->resolveCollision(box);
 
 			box->setPosition(box->getPosition() - plane->getNormal() * maxOl);
 

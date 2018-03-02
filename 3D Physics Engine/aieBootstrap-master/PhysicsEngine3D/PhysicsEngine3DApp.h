@@ -69,9 +69,6 @@ protected:
 	Sphere* ball2;
 	Sphere* ball3;
 
-	// Plane pointer used to create a new plane
-	//Plane* plane;
-
 	// Vector3s used to initilize the three boxes' positions
 	glm::vec3 m_box1pos;
 	glm::vec3 m_box2pos;

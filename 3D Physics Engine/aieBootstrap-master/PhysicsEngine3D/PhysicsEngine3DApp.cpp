@@ -101,7 +101,7 @@ void PhysicsEngine3DApp::shutdown()
 	// Deletes all the created Gizmos
 	aie::Gizmos::destroy();
 
-	// Deletes the physics scene pointer
+	// Deallocates memory from the physics scene pointer
 	delete m_physicsScene;
 }
 
@@ -113,6 +113,7 @@ void PhysicsEngine3DApp::shutdown()
 //--------------------------------------------------------------------------------
 void PhysicsEngine3DApp::update(float deltaTime) 
 {
+	// Begins setting up a window called add box
 	ImGui::Begin("Add Box");
 
 	if (ImGui::Button("Add Box", ImVec2(50, 50)))
@@ -122,15 +123,8 @@ void PhysicsEngine3DApp::update(float deltaTime)
 		m_physicsScene->addActor(newBox);
 	}
 
+	// Ends detecting any code needed for ImGui
 	ImGui::End();
-
-	//glClear(GL_COLOR_BUFFER_BIT);
-
-	////tetgui();
-
-	////collisionDebugInfo();
-
-	//ImGui::End();
 
 	// Query time since application started
 	float time = getTime();
