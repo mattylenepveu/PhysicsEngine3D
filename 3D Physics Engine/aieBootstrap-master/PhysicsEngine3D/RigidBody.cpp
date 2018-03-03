@@ -1,91 +1,108 @@
+// Include(s)
 #include "RigidBody.h"
-static const float MIN_LINEAR_THRESHOLD = 0.02f;
-static const float MIN_ROTATION_THRESHOLD = 0.02f;
 
-RigidBody::RigidBody(ShapeType shapeID, glm::vec3 position, glm::vec3 velocity, float mass) : PhysicsObject(shapeID)
+// A const float indicating the minimum drag value
+static const float MIN_LINEAR_THRESHOLD = 0.02f;
+
+//--------------------------------------------------------------------------------
+// Acts as an additional constructor.
+//
+// Param:
+//		position: A Vector3 that records an object's position in world space.
+//		velocity: A Vector3 that records the initial velocity of an object.
+//		mass: Represents the mass of an object as a float.
+//--------------------------------------------------------------------------------
+RigidBody::RigidBody(ShapeType shapeID, glm::vec3 position, glm::vec3 velocity, 
+					 float mass) : PhysicsObject(shapeID)
 {
+	// Sets values to be equal to the passed in values
 	m_position = position;
 	m_velocity = velocity;
 	m_mass = mass;
 
+	// Initilizes floats for the drag and elasticity
 	m_linearDrag = 1.0f;
-	m_angularDrag = 1.0f;
 	m_elasticity = 0.8f;
-	m_angularVelocity = glm::vec3(0.1f);
-
-	m_rotation = glm::mat4(1);
 }
 
-RigidBody::~RigidBody()
-{
-}
-
+//--------------------------------------------------------------------------------
+// Updates objects every frame (used in inherited classes).
+//
+// Param:
+//		gravity: Represents the gravity as a Vector3.
+//      timeStep: A float indicating the time step.
+//--------------------------------------------------------------------------------
 void RigidBody::fixedUpdate(glm::vec3 gravity, float timeStep)
 {
-	glm::quat xRotation = glm::angleAxis(m_angularVelocity.x * timeStep, glm::vec3(1, 0, 0));
-	glm::quat yRotation = glm::angleAxis(m_angularVelocity.y * timeStep, glm::vec3(0, 1, 0));
-	glm::quat zRotation = glm::angleAxis(m_angularVelocity.z * timeStep, glm::vec3(0, 0, 1));
-
-	glm::quat rotation = xRotation * yRotation * zRotation;
-	m_rotation = glm::mat4_cast(rotation) * m_rotation;
-
+	// Calculates the velocity using the gravity and the time step
 	m_velocity += gravity * timeStep;
-	m_position += m_velocity * timeStep;
-	m_velocity -= m_velocity * m_linearDrag * timeStep;
-	m_angularVelocity -= glm::cross(m_angularVelocity, m_position) * m_angularDrag * timeStep;
 
+	// Calculates the position to apply to the object with the velocity
+	m_position += m_velocity * timeStep;
+
+	// Applies drag to the velocity
+	m_velocity -= m_velocity * m_linearDrag * timeStep;
+
+	// Checks if the length of the velocity vector is lower than the threshold
 	if (glm::length(m_velocity) < MIN_LINEAR_THRESHOLD)
 	{
+		// Resets velocity of the RigidBody back to a zero Vector3
 		m_velocity = glm::vec3(0, 0, 0);
 	}
-
-	if (glm::length(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
-	{
-		m_angularVelocity = glm::vec3(0, 0, 0);
-	}
 }
 
-void RigidBody::applyForce(glm::vec3 force/*, glm::vec3 pos*/)
+//--------------------------------------------------------------------------------
+// Applies force to an object.
+//
+// Param:
+//		force: A Vector3 used to represent the force on an object.
+//--------------------------------------------------------------------------------
+void RigidBody::applyForce(glm::vec3 force)
 {
+	// Applies the force to the velocity of the object
 	m_velocity += force / m_mass;
-	//m_angularVelocity += glm::cross(force, pos) / (m_moment);
 }
 
+//--------------------------------------------------------------------------------
+// Applies force to an acting object after a collision.
+//
+// Param:
+//		actor2: Represents the RigidBody of the other object.
+//		force: A Vector3 used to represent the force of the collision.
+//--------------------------------------------------------------------------------
 void RigidBody::applyForceToActor(RigidBody* actor2, glm::vec3 force)
 {
+	// Applies the force to the second object
 	actor2->applyForce(force);
+
+	// Applies force to the current object this RigidBody is set to
 	this->applyForce(-force);
 }
 
-void RigidBody::resolveCollision(RigidBody* actor2/*, glm::vec3 contact, glm::vec3* collisionNormal*/)
+//--------------------------------------------------------------------------------
+// Resolves any collision that has occured between two objects.
+//
+// Param:
+//		actor2: A RigidBody pointer indicating the colliding object.
+//--------------------------------------------------------------------------------
+void RigidBody::resolveCollision(RigidBody* actor2)
 {
+	// Normalises the vector between both object's positions
 	glm::vec3 normal = glm::normalize(actor2->m_position - m_position);
+
+	// Gets and stores the relative velocity between both objects in local Vector3
 	glm::vec3 relativeVelocity = actor2->getVelocity() - m_velocity;
 
-	/*glm::vec3 perp(normal.y, -normal.x, normal.z);
-
-	float r1 = glm::dot(contact - m_position, -perp);
-	float r2 = glm::dot(contact - actor2->m_position, perp);
-	glm::vec3 v1 = glm::dot(m_velocity, normal) - r1 * m_angularVelocity;
-	glm::vec3 v2 = glm::dot(actor2->m_velocity, normal) + r2 * actor2->m_angularVelocity;*/
-
-	/*if (glm::length(v1) > glm::length(v2))
-	{
-		float mass1 = 1.0f / (1.0f / m_mass + (r1 * r1) / m_moment);
-		float mass2 = 1.0f / (1.0f / actor2->m_mass + (r2 * r2) / actor2->m_moment);*/
-
+	// Calculates the average elasticity between the two objects
 	float elasticity = (m_elasticity + actor2->getElasticity()) * 0.5f;
 
-		/*glm::vec3 force = (1.0f + elasticity) * mass1 * mass2 / (mass1 + mass2) * (v1 - v2) * normal;
-
-		applyForce(-force, contact - m_position);
-		actor2->applyForce(force, contact - actor2->m_position);
-	}*/
-
+	// Calculates the j for use in the force equation
 	float j = glm::dot(-(1 + elasticity) * (relativeVelocity), normal)
 			/ glm::dot(normal, normal * ((1 / m_mass) + (1 / actor2->getMass())));
 
+	// Calculates the force to apply to both objects
 	glm::vec3 force = normal * j;
 
+	// Applies the force to both of the objects
 	applyForceToActor(actor2, force);
 }

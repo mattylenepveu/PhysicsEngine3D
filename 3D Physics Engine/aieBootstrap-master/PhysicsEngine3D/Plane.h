@@ -38,9 +38,9 @@ public:
 	virtual void fixedUpdate(glm::vec3 gravity, float timeStep) {}
 
 	//--------------------------------------------------------------------------------
-	// Function makes the Gizmo for the plane.
+	// Function makes the Gizmo for the plane (Not being used)
 	//--------------------------------------------------------------------------------
-	virtual void makeGizmo();
+	virtual void makeGizmo() {}
 
 	//--------------------------------------------------------------------------------
 	// Function used for debugging purposes (used in inherited classes).
@@ -52,9 +52,8 @@ public:
 	//
 	// Param:
 	//		actor2: A RigidBody pointer indicating the colliding object
-	//		contact: A Vector3 that indicates how much contact has been made
 	//--------------------------------------------------------------------------------
-	void resolveCollision(RigidBody* actor2/*, glm::vec3 contact*/);
+	void resolveCollision(RigidBody* actor2);
 
 	//--------------------------------------------------------------------------------
 	// A getter function that returns the normal of the plane.

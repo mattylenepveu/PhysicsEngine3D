@@ -17,7 +17,7 @@ public:
 	// Acts as an additional constructor.
 	//
 	// Param:
-	//		position: A Vector3 that records the boxes position in world space.
+	//		position: A Vector3 that records the boxes' position in world space.
 	//		velocity: A Vector3 that records the initial velocity of the box.
 	//		mass: Represents the mass of the box as a float.
 	//		width: A float initializing the boxes' width.

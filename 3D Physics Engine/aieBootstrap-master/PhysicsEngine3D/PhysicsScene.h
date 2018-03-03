@@ -31,12 +31,9 @@ public:
 	void addActor(PhysicsObject* actor);
 
 	//--------------------------------------------------------------------------------
-	// Removes an actor from actor array the Physics Scene.
-	//
-	// Param:
-	//		actor: A PhysicsObject pointer that removes the actor to the scene.
+	// Removes the top actor from actor array the Physics Scene.
 	//--------------------------------------------------------------------------------
-	void removeActor(PhysicsObject* actor);
+	void removeActor();
 
 	//--------------------------------------------------------------------------------
 	// Updates the class every frame.

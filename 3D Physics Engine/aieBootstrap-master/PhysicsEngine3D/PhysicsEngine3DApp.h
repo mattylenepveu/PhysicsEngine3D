@@ -2,7 +2,7 @@
 
 // Include(s)
 #include "Application.h"
-#include "Font.h"
+#include <vector>
 #include <glm/mat4x4.hpp>
 
 // Forward Declare(s)
@@ -88,4 +88,7 @@ protected:
 	glm::vec3 m_ball1vel;
 	glm::vec3 m_ball2vel;
 	glm::vec3 m_ball3vel;
+
+	// Keeps track of how many objects are added and removed
+	int objectCount;
 };

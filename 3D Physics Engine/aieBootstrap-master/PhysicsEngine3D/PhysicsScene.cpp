@@ -56,14 +56,12 @@ void PhysicsScene::addActor(PhysicsObject* actor)
 }
 
 //--------------------------------------------------------------------------------
-// Removes an actor from actor array the Physics Scene.
-//
-// Param:
-//		actor: A PhysicsObject pointer that removes the actor to the scene.
+// Removes the top actor from actor array the Physics Scene.
 //--------------------------------------------------------------------------------
-void PhysicsScene::removeActor(PhysicsObject* actor)
+void PhysicsScene::removeActor()
 {
-	remove(std::begin(m_actors), std::end(m_actors), actor);
+	delete m_actors.back();
+	m_actors.pop_back();
 }
 
 //--------------------------------------------------------------------------------
@@ -86,7 +84,10 @@ void PhysicsScene::update(float dt)
 		// Calls each actor's update function, passing in gravity and timestep 
 		for (auto pActor : m_actors)
 		{
-			pActor->fixedUpdate(m_gravity, m_timeStep);
+			if (pActor != nullptr)
+			{
+				pActor->fixedUpdate(m_gravity, m_timeStep);
+			}
 		}
 
 		// Minuses accumulated time by the time step
@@ -104,7 +105,10 @@ void PhysicsScene::updateGizmos()
 {
 	for (auto pActor : m_actors)
 	{
-		pActor->makeGizmo();
+		if (pActor != nullptr)
+		{
+			pActor->makeGizmo();
+		}
 	}
 }
 
@@ -200,10 +204,10 @@ bool PhysicsScene::plane2aabb(PhysicsObject* obj1, PhysicsObject* obj2)
 		ol[1] = glm::dot(v, bottomRightBelow) - plane->getDistance();
 		ol[2] = glm::dot(v, topLeftBelow) - plane->getDistance();
 		ol[3] = glm::dot(v, topRightBelow) - plane->getDistance();
-		ol[4] = glm::dot(v, bottomLeftBelow) - plane->getDistance();
-		ol[5] = glm::dot(v, bottomRightBelow) - plane->getDistance();
-		ol[6] = glm::dot(v, topLeftBelow) - plane->getDistance();
-		ol[7] = glm::dot(v, topRightBelow) - plane->getDistance();
+		ol[4] = glm::dot(v, bottomLeftAbove) - plane->getDistance();
+		ol[5] = glm::dot(v, bottomRightAbove) - plane->getDistance();
+		ol[6] = glm::dot(v, topLeftAbove) - plane->getDistance();
+		ol[7] = glm::dot(v, topRightAbove) - plane->getDistance();
 
 		float maxOl = 0;
 

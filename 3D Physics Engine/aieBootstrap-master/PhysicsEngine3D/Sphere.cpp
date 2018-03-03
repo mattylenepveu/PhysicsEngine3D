@@ -1,30 +1,38 @@
+// Include(s)
 #include "Sphere.h"
-#include <Gizmos.h>
 
+//--------------------------------------------------------------------------------
+// Acts as an additional constructor.
+//
+// Param:
+//		position: A Vector3 that records the sphere's position in world space.
+//		velocity: A Vector3 that records the initial velocity of the sphere.
+//		mass: Represents the mass of the sphere as a float.
+//		radius: A float indicating the sphere's radius.
+//		colour: Indicates the colour of the sphere as a Vector4.
+//--------------------------------------------------------------------------------
 Sphere::Sphere(glm::vec3 position, glm::vec3 velocity,
 			   float mass, float radius, glm::vec4 colour) :
 			   RigidBody(ShapeType::SPHERE, position, velocity, mass)
 {
+	// Sets radius and colour to equal the passed in values
 	m_radius = radius;
 	m_colour = colour;
 
+	// Calculates the moment of the sphere
 	m_moment = 0.5f * mass * radius * radius;
 }
 
-Sphere::~Sphere()
-{
-}
-
-void Sphere::makeGizmo()
-{
-	//glm::vec3 end = glm::vec3(cos(m_rotation), sin(m_rotation), tan(m_rotation)) * m_radius;
-
-	aie::Gizmos::addSphere(m_position, m_radius, 12, 12, m_colour);
-	//aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 0, 0, 1));
-}
-
+//--------------------------------------------------------------------------------
+// Resets the position and velocity of the box when called.
+//
+// Param:
+//		position: A Vector3 recording the boxes reset position in world space.
+//		velocity: A Vector3 that records the reset velocity of the box.
+//--------------------------------------------------------------------------------
 void Sphere::resetPosition(glm::vec3 position, glm::vec3 velocity)
 {
+	// Sets the position and velocity of the sphere to equal passed in values
 	m_position = position;
 	m_velocity = velocity;
 }

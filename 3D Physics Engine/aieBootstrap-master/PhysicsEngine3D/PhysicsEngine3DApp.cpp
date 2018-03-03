@@ -1,3 +1,4 @@
+// Include(s)
 #include "PhysicsEngine3DApp.h"
 #include "Gizmos.h"
 #include "Input.h"
@@ -8,6 +9,9 @@
 #include "Imgui.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+
+// A const integer indicating the max amount of objects added
+static const int MAX_OBJ_COUNT = 10;
 
 //--------------------------------------------------------------------------------
 // Function acts as this class' constructor.
@@ -89,6 +93,9 @@ bool PhysicsEngine3DApp::startup()
 	// Adds the plane to the physics scene as an actor
 	m_physicsScene->addActor(plane);
 
+	// Initialises object count int to zero
+	objectCount = 0;
+
 	// Returns true by default
 	return true;
 }
@@ -114,13 +121,58 @@ void PhysicsEngine3DApp::shutdown()
 void PhysicsEngine3DApp::update(float deltaTime) 
 {
 	// Begins setting up a window called add box
-	ImGui::Begin("Add Box");
+	ImGui::Begin("Dynamically Add and Remove Objects");
 
-	if (ImGui::Button("Add Box", ImVec2(50, 50)))
+	// Checks if the "Add Box" button has been pressed
+	if (ImGui::Button("Add Box", ImVec2(100, 20)))
 	{
-		Box* newBox = new Box(glm::vec3(0, 10, 0), glm::vec3(2, 0, 0),
-							  3.0f, 1.0f, 1.0f, 1.0f, glm::vec4(1, 0, 0, 1));
-		m_physicsScene->addActor(newBox);
+		// Checks if the no. of added boxes has surpassed the threshold
+		if (objectCount < MAX_OBJ_COUNT)
+		{
+			// Creates a "new" box and stores into the box array 
+			Box* newBall = new Box(glm::vec3(17, 15, -15 + (objectCount * 3)),
+								   glm::vec3(2, 0, 0), 3.0f, 1.0f, 1.0f, 1.0f, 
+								   glm::vec4(0, 0, 0, 1));
+
+			// Adds the newly added box as an actor
+			m_physicsScene->addActor(newBall);
+
+			// Increments the box count variable
+			objectCount++;
+		}
+	}
+
+	// Checks if the "Add Box" button has been pressed
+	if (ImGui::Button("Add Ball", ImVec2(100, 20)))
+	{
+		// Checks if the no. of added balls has surpassed the threshold
+		if (objectCount < MAX_OBJ_COUNT)
+		{
+			// Creates a "new" sphere and stores into the ball array 
+			Sphere* newBall = new Sphere(glm::vec3(-15 + (objectCount * 3), 15, 17),
+										 glm::vec3(2, 0, 0), 3.0f, 1.0f, 
+										 glm::vec4(0.9f, 0.9f, 0.9f, 1));
+
+			// Adds the newly added ball as an actor
+			m_physicsScene->addActor(newBall);
+
+			// Increments the ball count variable
+			objectCount++;
+		}
+	}
+
+	// Checks if the "Remove Object" button has been pressed
+	if (ImGui::Button("Remove Object", ImVec2(100, 20)))
+	{
+		// Checks if the object count is greater than zero
+		if (objectCount > 0)
+		{
+			// Removes the top object from the actor list
+			m_physicsScene->removeActor();
+
+			// Decreases ball count int by one
+			--objectCount;
+		}
 	}
 
 	// Ends detecting any code needed for ImGui
@@ -172,8 +224,8 @@ void PhysicsEngine3DApp::update(float deltaTime)
 		ball3->resetPosition(m_ball3pos, m_ball3vel);
 	}
 
-	// Checks if the "UP" key is down every frame
-	if (input->isKeyDown(aie::INPUT_KEY_UP))
+	// Checks if the "W" key is down every frame
+	if (input->isKeyDown(aie::INPUT_KEY_W))
 	{
 		// Creates a world matrix as an inverse of the view matrix
 		glm::mat4 worldMatrix = inverse(m_viewMatrix);
@@ -185,8 +237,8 @@ void PhysicsEngine3DApp::update(float deltaTime)
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
-	// Checks if the "DOWN" key is down every frame
-	if (input->isKeyDown(aie::INPUT_KEY_DOWN))
+	// Checks if the "S" key is down every frame
+	if (input->isKeyDown(aie::INPUT_KEY_S))
 	{
 		// Creates a world matrix as an inverse of the view matrix
 		glm::mat4 worldMatrix = inverse(m_viewMatrix);
@@ -198,14 +250,14 @@ void PhysicsEngine3DApp::update(float deltaTime)
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
-	// Checks if the "LEFT" key is down every frame
-	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
+	// Checks if the "A" key is down every frame
+	if (input->isKeyDown(aie::INPUT_KEY_A))
 	{
 		// Creates a world matrix as an inverse of the view matrix
 		glm::mat4 worldMatrix = inverse(m_viewMatrix);
 
 		// Creates a rotation matrix, allowing user to rotate camera left
-		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * -1.0f, 
+		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * 1.0f, 
 									glm::vec3(m_viewMatrix * glm::vec4(0, 1, 0, 0)));
 
 		// Multiplies world matrix by the rotation matrix
@@ -215,14 +267,14 @@ void PhysicsEngine3DApp::update(float deltaTime)
 		m_viewMatrix = inverse(worldMatrix);
 	}
 
-	// Checks if the "RIGHT" key is down every frame
-	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
+	// Checks if the "D" key is down every frame
+	if (input->isKeyDown(aie::INPUT_KEY_D))
 	{
 		// Creates a world matrix as an inverse of the view matrix
 		glm::mat4 worldMatrix = inverse(m_viewMatrix);
 
 		// Creates a rotation matrix, allowing user to rotate camera right
-		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * 1.0f, 
+		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), deltaTime * -1.0f, 
 									glm::vec3(m_viewMatrix * glm::vec4(0, 1, 0, 0)));
 
 		// Multiplies world matrix by the rotation matrix
