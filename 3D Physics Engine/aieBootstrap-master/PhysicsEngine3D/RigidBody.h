@@ -16,6 +16,7 @@ public:
 	// Acts as an additional constructor.
 	//
 	// Param:
+	//		shapeID: A ShapeType that passes through the shape of the object.
 	//		position: A Vector3 that records an object's position in world space.
 	//		velocity: A Vector3 that records the initial velocity of an object.
 	//		mass: Represents the mass of an object as a float.
